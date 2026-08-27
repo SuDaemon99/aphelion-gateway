@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aphelion System - Gateway</title>
+    <script src="https://app.midtrans.com/snap/snap.js" data-client-key="Mid-client-gHmbjVrTmM94Zeek"></script>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #090710;
+            background-image: radial-gradient(circle at 50% -20%, #2a164d 0%, #090710 70%);
+            color: #fff; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+        }
+        .card { 
+            background: rgba(18, 14, 30, 0.6); 
+            backdrop-filter: blur(15px);
+            padding: 40px 30px; 
+            border-radius: 20px; 
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-top: 2px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+            width: 350px; 
+            text-align: center; 
+        }
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 2px;
+            border-radius: 20px 20px 0 0;
+            background: linear-gradient(90deg, #ffb400, #ff0a78, #9d4edd, #00f0ff);
+        }
+        .logo-container {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 25px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: #090710;
+            box-shadow: 
+                0 -10px 25px rgba(255, 10, 120, 0.5),   
+                10px 0 25px rgba(0, 240, 255, 0.5),     
+                0 10px 25px rgba(157, 78, 221, 0.5),    
+                -10px 0 25px rgba(255, 180, 0, 0.5);    
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        .logo-container img { width: 100%; height: 100%; object-fit: cover; }
+        h2 { 
+            margin: 0 0 5px 0; 
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-weight: 800;
+            background: linear-gradient(90deg, #ffb400, #ff0a78, #00f0ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        p { font-size: 13px; color: #b3a7c9; margin-bottom: 30px; letter-spacing: 1px; }
+        .input-group { text-align: left; margin-bottom: 20px; }
+        .input-group label { 
+            font-size: 11px; 
+            color: #00f0ff; 
+            letter-spacing: 1.5px; 
+            margin-bottom: 8px; 
+            display: block;
+            font-weight: 600;
+        }
+        input { 
+            width: 100%; 
+            padding: 14px; 
+            border-radius: 10px; 
+            border: 1px solid rgba(157, 78, 221, 0.4); 
+            background: rgba(255, 255, 255, 0.03); 
+            color: #fff; 
+            box-sizing: border-box; 
+            outline: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        input::placeholder { color: rgba(255, 255, 255, 0.3); }
+        input:focus {
+            border-color: #00f0ff;
+            background: rgba(0, 240, 255, 0.05);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+        }
+        button { 
+            background: linear-gradient(90deg, #9d4edd, #ff0a78, #ffb400); 
+            background-size: 200% auto;
+            color: white; 
+            border: none; 
+            padding: 15px; 
+            margin-top: 10px;
+            width: 100%; 
+            border-radius: 10px; 
+            font-weight: 800; 
+            letter-spacing: 1.5px;
+            cursor: pointer; 
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(255, 10, 120, 0.3);
+        }
+        button:hover { 
+            background-position: right center;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(255, 180, 0, 0.4); 
+        }
+        /* Menghilangkan tombol naik-turun angka bawaan browser */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <div class="logo-container">
+            <img src="logo.jpg" alt="Aphelion Logo" onerror="this.src='https://via.placeholder.com/100/090710/00f0ff?text=AP'">
+        </div>
+        
+        <h2>Aphelion</h2>
+        <p>System Authorization Gateway</p>
+        
+        <div class="input-group">
+            <label>TELEGRAM USERNAME</label>
+            <input type="text" id="telegramUsername" placeholder="@username" required>
+        </div>
+
+        <div class="input-group">
+            <label>ALAMAT EMAIL</label>
+            <input type="email" id="userEmail" placeholder="email@gmail.com" required>
+        </div>
+
+        <!-- Kolom Baru untuk Input Nominal -->
+        <div class="input-group">
+            <label>NOMINAL (Min. 10000)</label>
+            <input type="number" id="payAmount" placeholder="10000" min="10000" required>
+        </div>
+
+        <!-- Tulisan tombol diubah jadi dinamis tanpa nominal tetap -->
+        <button id="payButton">ACTIVATE SYSTEM</button>
+    </div>
+
+    <script>
+        document.getElementById('payButton').addEventListener('click', async function () {
+            const username = document.getElementById('telegramUsername').value.trim();
+            const email = document.getElementById('userEmail').value.trim();
+            const amount = document.getElementById('payAmount').value.trim();
+            
+            if (!username || !email || !amount) {
+                alert('Semua data wajib diisi, Bray!');
+                return;
+            }
+
+            // Validasi minimal pembayaran di sisi user
+            if (parseInt(amount) < 10000) {
+                alert('Minimal donasi/pembayaran adalah Rp 10.000!');
+                return;
+            }
+
+            try {
+                // Panggil backend dengan mengirim jumlah "amount"
+                const response = await fetch('http://localhost:3000/api/get-snap-token', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: username, email: email, amount: parseInt(amount) })
+                });
+                const data = await response.json();
+
+                if (data.token) {
+                    window.snap.pay(data.token, {
+                        onSuccess: function(result){ alert("Berhasil! Cek Telegram."); },
+                        onPending: function(result){ alert("Selesaikan pembayaran."); },
+                        onError: function(result){ alert("Pembayaran Gagal!"); }
+                    });
+                } else {
+                    alert('Gagal membuat token: ' + (data.error || 'Unknown error'));
+                }
+            } catch (err) {
+                alert('Gagal terhubung ke backend server lokal!');
+            }
+        });
+    </script>
+</body>
+</html>
