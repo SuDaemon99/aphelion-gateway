@@ -202,7 +202,8 @@
             }
 
             try {
-                const response = await fetch('https://aphelion-backend1.vercel.app/api/get-snap-token', {
+                // 🔥 URL UDAH DI-UPDATE KE VPS BARU
+                const response = await fetch('https://api.aphelion.my.id/api/get-snap-token', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ telegram_id: uid, email: email, amount: parseInt(amount) })
